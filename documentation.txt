@@ -1,0 +1,276 @@
+$npm init
+$npm install --save react@0.14.3
+$npm install --save react-dom@0.14.3
+
+$npm install --save-dev babel-core@6.3.13 babel-loader@6.2.0 babel-preset-es2015@6.3.13 babel-preset-react@6.3.13
+
+$mkdir public 
+$cd public
+$touch index.html
+
+create the html structure in index.html
+-> public/index.html
+    html:5 (+ tab)
+    add bootstrap cdn
+    add inside body
+	  <div id="app"></div>
+	   <script src="bundle.js"></script>
+
+touch webpack.config.js
+->webpack.config.js
+	export an object that has all the configuration
+		1)tell webpack where our root component is
+		2)tell webpack where after it's done transpiling everything, and combining it all into one file, where to puke out that new file
+		3)tell webpack what to do with the main JS code and all of its children components
+			-use the Babel loader
+			-tell Babel what transformation we'd like it to do to our code
+			-create a presets of property on this query object( Presets is all the transformations that Babel is going to do to our code)
+			-React preset,ES2015
+
+		code 
+				module.exports = {
+				    entry: "./app/components/Main.js",
+				    output: {
+				        filename: "public/bundle.js"
+				    },
+				    module: {
+				        loaders: [{
+				            test: /\.jsx?$/,
+				            exclude: /(node_modules|bower_components)/,
+				            loader: 'babel',
+				            query: {
+				                presets: ['react', 'es2015']
+				            }
+				        }]
+				    }
+				}
+
+
+
+build the first component
+$mkdir app (where all the application code will live)
+
+$cd app
+$mkdir components
+
+$cd components
+$touch Main.js
+	-import react
+	-create a component using React.createClass
+	-render the component to DOM
+		- import react-dom
+		- use the render function
+	code
+			var React = require('react'); // import react
+			var ReactDOM = require('react-dom');
+			// create a react component
+			var Main = React.createClass({
+				// render specifies what the UI looks like for this element
+				render: function(){
+					return (
+						<div>
+							Hello World
+						</div>
+
+						)
+				} 
+
+			});
+
+			//render the <Main/> to the DOM
+
+			ReactDOM.render(<Main />, document.getElementById("app"));
+			// arg1- the div, the place to render 
+
+
+
+$webpack -w
+open index.html in browser
+You will see the 1st hello world
+
+===========
+routing 
+===========
+
+make a new component 
+$cd app/components/
+$touch Home.js
+
+	code 
+			var React = require('react');
+
+		var Home = React.createClass({
+			render: function(){
+				return (
+					<h2 className = "text-center">
+						Search by Github Username Above
+					</h2>
+					)
+			}
+		});
+		module.exports = Home;
+
+disallow the main controller to be in charge of rendering 
+-> app/components/Main.js
+	remove the ReactDOM.render(...)
+	add the line 
+		module.exports = Main;
+
+	remove "var ReactDOM = require('react-dom');"
+
+make another component to handle routing
+$cd app/
+$touch App.js
+
+
+add react route module and dependency of it
+$npm install --save react-router@1.0.1 history@1.13.1
+
+
+-> app/App.js
+	-require React
+	-react-dom 
+	-require react-router
+	-make router to be a property on the object returned by react-router.
+	-require a routes object that we're going to make later
+	-call ReactDOM.render and pass in our router,and getElementById app.
+
+	code
+		var React = require('react');
+		var ReactDOM = require('react-dom');
+		var Router = require('react-router').Router;
+		var routes = require('./config/routes');
+
+		ReactDOM.render(
+			<Router>{routes}</Router>,
+			document.getElementById('app');
+		)
+
+
+change the webpack config
+->webpack.js
+    modify entry: "./app/components/Main.js" to 
+
+=========================================================
+build up routes
+
+we will exporting the instructions for our router which will then go to our App.js and our router now receives those routes and says, "OK, whenever someone is at the home index of our app, go ahead and render this main component."
+=======================================================
+$cd app
+$mkdir config
+$cd config/
+$touch routes.js (this is the indtruction sheet of routers)
+
+
+
+
+-> app/config/routers.js
+	-require all components that we've built so far
+	-require our router with React router, and that router has a route property under router.route
+	-describe what will be exported 
+
+	code 
+		var React = require('react');
+		var Main = require('../components/Main');
+		var Home = require('../components/Home');
+		var Router = require('react-router');
+		var Route = Router.Route;
+
+
+
+		module.exports = (
+			<Route path="/" component={Main}>
+
+			</Route>
+		);
+
+===========================================
+specify some children routes
+===========================================
+
+-> app/config/routers.js
+	-require index route from the router
+
+index route 
+( default path, "Specify this component or activate this component if none of our other routes that we had earlier match.")
+
+->app/components/Main.js
+	- a nav
+	- rendering this.props.children (it will be replaced with whatever the active component)
+
+->app/config/routes.js
+	
+If we go back to our routes file, when I go to /path we're going to render menu, which is going to come up and render this menu, but we're also going to render this index route, which is our home component. Then this.props.children is going to get swapped out with our home component, which will say, "Search by GitHub username."
+
+Let's go ahead and see if this works. Webpac is still running. I'll hit refresh. There we go. We have our menu component because main is active. The home route is also active, so we get "Search by GitHub username."
+
+
+make the profile component
+$cd components
+$touch Profile.js
+->app/components/Profile.js
+	- require react
+	- require react-router
+	- create the Profile component
+	code
+		var React = require('react');
+		var Router = require('react-router');
+
+		var Profile = React.createClass({
+			render: function(){
+				return (
+					<div className="row">
+						<div className="col-md-4">
+						 User Profile Component
+						</div>				
+						<div className="col-md-4">
+						 Repos Component
+						</div>				
+						<div className="col-md-4">
+						 Notes Component
+						</div>
+					</div>
+				)
+			}
+		});
+		module.exports = Profile;
+
+=================================================
+Set the initial state of the profile component
+=================================================
+->app->components->Profile.js
+	add code inside the "React.createClass", but before render
+
+		getInitialState: function(){
+		return {
+			notes: [],
+			bio: {},
+			repos: []
+		}
+	},
+
+
+add the new component to the routes 
+->app/config/routes.js
+ -require by adding the code
+	var Profile = require('../components/Profile');
+ -hook up the route by adding the code
+   	<Route path="profile/:username" component={Profile} />
+
+   	the whole file now looks like this 
+   	code 
+			var React = require('react');
+			var Main = require('../components/Main');
+			var Home = require('../components/Home');
+			var Profile = require('../components/Profile');
+			var Router = require('react-router');
+			var Route = Router.Route;
+			var IndexRoute = Router.IndexRoute;
+
+			module.exports = (
+			  <Route path="/" component={Main}>
+			  	<Route path="profile/:username" component={Profile} />
+			    <IndexRoute component={Home} />
+			  </Route>
+			);
+
