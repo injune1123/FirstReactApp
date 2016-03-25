@@ -1,25 +1,23 @@
-var React = require('react'); // import react
-var SearchGithub = require('./SearchGithub');
+import React from 'react'; // import react
+import SearchGithub from './SearchGithub';
 // create a react component
-var Main = React.createClass({
-	// render specifies what the UI looks like for this element
-	render: function(){
+
+class Main extends React.Component{
+	render (){
 		return (
 			<div className="Main-container">
 				<nav className="navbar navbar-default" role="navigation">
 					<div className="col-sm-7 col-sm-offset-2" style={{marginTop: 15}}>
-						<SearchGithub />
+						<SearchGithub history={this.props.history}/>
 					</div>
 				</nav>
 				<div className="container">
 					{this.props.children}
 				</div>
 			</div>
-			)
-	} 
-
-});
+		)
+	}
+}
 
 //render the <Main/> to the DOM
-
-module.exports = Main;
+export default Main;
