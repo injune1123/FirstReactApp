@@ -1,12 +1,7 @@
-var React = require('react');
+import React from 'react';
 
-var UserProfiles = React.createClass({
-	propTypes:{
-		username: React.PropTypes.string.isRequired,
-		bio: React.PropTypes.object.isRequired
-	},
-	render: function(){
-		console.log('BIO', this.props.bio)
+class UserProfile extends React.Component {
+	render(){
 		return(
 			<div>
 				 {this.props.bio.avatar_url && <li className="list-group-item"> <img src={this.props.bio.avatar_url} className="img-rounded img-responsive"/></li>}
@@ -21,8 +16,13 @@ var UserProfiles = React.createClass({
 		         {this.props.bio.blog && <li className="list-group-item">Blog: <a href={this.props.bio.blog}> {this.props.bio.blog}</a></li>}
 			</div>
 
-			)
+		)
 	}
-});
+}
 
-module.exports = UserProfiles;
+UserProfile.propTypes={
+	username: React.PropTypes.string.isRequired,
+	bio: React.PropTypes.object.isRequired
+};
+
+export default UserProfile;
