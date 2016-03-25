@@ -361,7 +361,8 @@ $ npm install --save-dev webpack
 ==================
 $ npm install --save axios@0.8.0
 
-
+==================
+$npm install --save re-base
 
 
 
