@@ -274,3 +274,109 @@ add the new component to the routes
 			  </Route>
 			);
 
+====================================================
+passing props down to a component
+
+Through props, we're able to gain access to data that's stored in our parents or stored in any other higher component.
+
+The way you access route parameters with React router is the same way you access any data that's being passed down to a child component, it's through this.props.
+
+====================================================
+
+
+make a Github folder and Notes folder in the components folder
+make Repos.js, and UerProfile.js in the Github folder
+make a Notes.js file in the Notes folder
+
+$cd app/components
+$mkdir Notes
+$mkdir Github
+$cd Notes
+$touch Notes.js
+$cd ../Github
+$touch Repos.js
+$touch UserProfile.js
+
+
+make 3 components in the three created js files
+ ->app/componenets/Github/Repo.js
+	code
+		var React = require('react');
+
+		var Notes = React.createClass({
+			render: function(){
+				return(
+					<div>NOTES</div>
+
+					)
+			}
+		});
+		module.exports = Notes;
+
+  ->app/componenets/Github/UserProfile.js
+	code
+		var React = require('react');
+
+		var UserProfiles = React.createClass({
+			render: function(){
+				return(
+					<div>USER PROFILE</div>
+
+					)
+			}
+		});
+		module.exports = UserProfiles;
+
+
+  ->app/componenets/Notes/Notes.js
+		var React = require('react');
+
+		var Notes = React.createClass({
+			render: function(){
+				return(
+					<div>NOTES</div>
+
+					)
+			}
+		});
+
+
+
+		module.exports = Notes;
+
+use each component in the profile component
+===========
+firebase
+===========
+npm install --save reactfire@0.5.1
+npm install --save firebase
+var Firebase = reuqire('firebase')
+
+===============
+resolve error
+================
+$ npm install --save-dev webpack
+
+
+==================
+$ npm install --save axios@0.8.0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
